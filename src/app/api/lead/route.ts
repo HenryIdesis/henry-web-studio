@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+export const runtime = 'nodejs';
+
 type LeadBody = {
   name?: string;
   business?: string;
@@ -43,10 +45,20 @@ export async function POST(request: Request) {
         });
 
         await transporter.sendMail({
-          from: process.env.EMAIL_USER,
+          from: `Henry Web Studio <${process.env.EMAIL_USER}>`,
           replyTo: trimmedEmail,
           to: process.env.EMAIL_USER,
           subject: `Henry Web Studio: novo contacto de ${trimmedName}`,
+          text: [
+            'Novo contacto',
+            '',
+            `Nome: ${trimmedName}`,
+            `Business: ${trimmedBusiness || '-'}`,
+            `Email: ${trimmedEmail}`,
+            `Website: ${trimmedWebsite || '-'}`,
+            '',
+            trimmedMessage,
+          ].join('\n'),
           html: `
             <h2>Novo contacto</h2>
             <p><strong>Nome:</strong> ${escapeHtml(trimmedName)}</p>
@@ -61,7 +73,10 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: true, method: 'email' });
       } catch (error) {
         console.error('Falha no envio do email:', error);
-        // Se falhar, cai no fallback
+        return NextResponse.json(
+          { error: 'Não foi possível enviar o email. Verifique EMAIL_USER e EMAIL_PASS.' },
+          { status: 500 }
+        );
       }
     }
 
