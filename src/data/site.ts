@@ -1,7 +1,7 @@
 export const siteName = "Henry Web Studio";
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://henrywebstudio.com";
-export const contactEmail = "hello@henrywebstudio.com";
+export const contactEmail = "henryidesis.profissional@gmail.com";
 
 export const trustSignals = [
   "Fast turnaround",

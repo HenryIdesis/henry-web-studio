@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   caseStudy,
   contactEmail,
-  faq,
   monthlyOffer,
   problems,
   processSteps,
@@ -10,6 +9,8 @@ import {
   solutions,
   trustSignals,
 } from "@/data/site";
+import { FAQAccordion } from "@/components/faq-accordion";
+import { LeadForm } from "@/components/lead-form";
 
 function SectionHeading({
   eyebrow,
@@ -51,10 +52,12 @@ function SectionShell({
   children,
   tone = "dark",
   className = "",
+  id,
 }: Readonly<{
   children: React.ReactNode;
   tone?: "dark" | "soft" | "warm";
   className?: string;
+  id?: string;
 }>) {
   const toneClass =
     tone === "soft"
@@ -64,13 +67,24 @@ function SectionShell({
         : "section-surface";
 
   return (
-    <section className={`${toneClass} border-t border-white/5 ${className}`}>
+    <section id={id} className={`${toneClass} border-t border-white/5 ${className}`}>
       <div className="mx-auto max-w-[1200px] px-6 sm:px-8">{children}</div>
     </section>
   );
 }
 
-export default function Home() {
+export default function Home({
+  searchParams,
+}: {
+  searchParams?: { lead?: string };
+}) {
+  const leadStatus =
+    searchParams?.lead === "success"
+      ? "success"
+      : searchParams?.lead === "error"
+        ? "error"
+        : "idle";
+
   return (
     <main className="min-h-screen">
       <header className="sticky top-0 z-40 border-b border-white/8 bg-[#07111f]/65 backdrop-blur-2xl">
@@ -166,8 +180,8 @@ export default function Home() {
               </div>
 
               <div className="grid gap-4 p-4 lg:grid-cols-[1.12fr_0.88fr]">
-                <div className="surface-card rounded-[1.8rem] p-5">
-                  <div className="flex items-start justify-between gap-4">
+                <div className="surface-card min-w-0 rounded-[1.8rem] p-5">
+                  <div className="flex min-w-0 items-start justify-between gap-4">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-100/80">
                         Fast preview
@@ -176,7 +190,7 @@ export default function Home() {
                         Clear next step
                       </h3>
                     </div>
-                    <div className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold tracking-[0.18em] text-white/70 uppercase">
+                    <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold tracking-[0.18em] text-white/70 uppercase">
                       24h / 48h
                     </div>
                   </div>
@@ -186,16 +200,22 @@ export default function Home() {
                       <div className="h-2 w-24 rounded-full bg-amber-200/75" />
                       <div className="mt-3 h-9 w-[78%] rounded-2xl bg-white/[0.07]" />
                     </div>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-[1.35rem] border border-white/10 bg-slate-950/55 p-4">
-                        <p className="text-xs text-white/45">Call path</p>
-                        <p className="mt-2 text-lg font-semibold text-white">
+                    <div className="grid gap-3">
+                      <div className="min-w-0 rounded-[1.35rem] border border-white/10 bg-slate-950/55 px-4 py-4">
+                        <div className="flex items-center justify-between gap-4">
+                          <p className="text-xs text-white/45">Call path</p>
+                          <span className="h-2 w-2 rounded-full bg-amber-200/70" />
+                        </div>
+                        <p className="mt-2 text-base font-semibold leading-6 text-white sm:text-lg">
                           Easy to contact
                         </p>
                       </div>
-                      <div className="rounded-[1.35rem] border border-white/10 bg-slate-950/55 p-4">
-                        <p className="text-xs text-white/45">Trust</p>
-                        <p className="mt-2 text-lg font-semibold text-white">
+                      <div className="min-w-0 rounded-[1.35rem] border border-white/10 bg-slate-950/55 px-4 py-4">
+                        <div className="flex items-center justify-between gap-4">
+                          <p className="text-xs text-white/45">Trust</p>
+                          <span className="h-2 w-2 rounded-full bg-white/70" />
+                        </div>
+                        <p className="mt-2 text-base font-semibold leading-6 text-white sm:text-lg">
                           Looks established
                         </p>
                       </div>
@@ -211,8 +231,8 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="grid gap-4">
-                  <div className="surface-card rounded-[1.8rem] p-5">
+                <div className="grid min-w-0 gap-4">
+                  <div className="surface-card min-w-0 rounded-[1.8rem] p-5">
                     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">
                       Lead quality
                     </p>
@@ -227,7 +247,7 @@ export default function Home() {
                       contact without friction.
                     </p>
                   </div>
-                  <div className="surface-card rounded-[1.8rem] p-5">
+                  <div className="surface-card min-w-0 rounded-[1.8rem] p-5">
                     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-100/75">
                       Built for
                     </p>
@@ -333,7 +353,7 @@ export default function Home() {
         </div>
       </SectionShell>
 
-      <SectionShell tone="soft" className="py-14 lg:py-20">
+      <SectionShell id="offer" tone="soft" className="py-14 lg:py-20">
         <SectionHeading
           eyebrow="Offer"
           title="One simple monthly plan with the right things included."
@@ -391,6 +411,12 @@ export default function Home() {
               Designed to improve trust, clarity, and lead conversion without
               overpromising results.
             </div>
+            <Link
+              href="#contact"
+              className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-amber-200 px-5 py-3 text-sm font-semibold text-slate-950 transition duration-300 hover:bg-amber-100"
+            >
+              Get my free preview
+            </Link>
           </aside>
         </div>
       </SectionShell>
@@ -435,7 +461,7 @@ export default function Home() {
         </div>
       </SectionShell>
 
-      <SectionShell tone="warm" className="py-14 lg:py-20">
+      <SectionShell id="work" tone="warm" className="py-14 lg:py-20">
         <SectionHeading
           eyebrow="Featured work"
           title="A published project that shows the work is real."
@@ -450,9 +476,14 @@ export default function Home() {
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-100/80">
                     Published site
                   </p>
-                  <h3 className="mt-3 text-2xl font-semibold text-white sm:text-[2rem]">
+                  <a
+                    href="https://simuladormei.com.br"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-3 inline-flex text-2xl font-semibold text-white sm:text-[2rem] transition hover:text-amber-100"
+                  >
                     {caseStudy.name}
-                  </h3>
+                  </a>
                 </div>
                 <div className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-medium text-white/72">
                   Real proof
@@ -601,38 +632,16 @@ export default function Home() {
         </div>
       </SectionShell>
 
-      <SectionShell tone="warm" className="py-14 lg:py-20">
+      <SectionShell id="faq" tone="warm" className="py-14 lg:py-20">
         <SectionHeading
           eyebrow="FAQ"
           title="Short answers to the questions buyers actually ask."
           description="The goal here is to remove hesitation and make the monthly service feel simple."
         />
-        <div className="mt-10 grid gap-3">
-          {faq.map((item, index) => (
-            <details
-              key={item.question}
-              className={[
-                "group rounded-[1.5rem] border px-5 py-4 transition duration-300 hover:-translate-y-0.5",
-                index === 1 || index === 4
-                  ? "surface-card border-amber-200/18"
-                  : "surface-card",
-              ].join(" ")}
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-base font-semibold text-white">
-                <span>{item.question}</span>
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white/55 transition duration-300 group-open:rotate-45">
-                  +
-                </span>
-              </summary>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-white/72">
-                {item.answer}
-              </p>
-            </details>
-          ))}
-        </div>
+        <FAQAccordion />
       </SectionShell>
 
-      <SectionShell tone="dark" className="py-14 lg:py-20 pb-28">
+      <SectionShell id="contact" tone="dark" className="py-14 lg:py-20 pb-28">
         <div className="grid gap-8 rounded-[2.4rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(10,15,24,0.84))] p-6 shadow-[0_28px_100px_rgba(0,0,0,0.34)] md:p-8 lg:grid-cols-[0.88fr_1.12fr] lg:p-10">
           <div className="relative">
             <div className="absolute right-0 top-0 h-44 w-44 rounded-full bg-amber-200/12 blur-3xl" />
@@ -665,78 +674,7 @@ export default function Home() {
             </div>
           </div>
 
-          <form
-            action={`mailto:${contactEmail}`}
-            method="post"
-            encType="text/plain"
-            className="surface-card rounded-[2rem] p-5 sm:p-6 lg:p-7"
-          >
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="grid gap-2 text-sm text-white/78">
-                Name
-                <input
-                  name="name"
-                  required
-                  className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-white outline-none ring-0 transition placeholder:text-white/32 focus:border-amber-200/40 focus:bg-white/[0.07]"
-                  placeholder="Your name"
-                />
-              </label>
-              <label className="grid gap-2 text-sm text-white/78">
-                Business
-                <input
-                  name="business"
-                  className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-white outline-none ring-0 transition placeholder:text-white/32 focus:border-amber-200/40 focus:bg-white/[0.07]"
-                  placeholder="Company name"
-                />
-              </label>
-            </div>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <label className="grid gap-2 text-sm text-white/78">
-                Email
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-white outline-none ring-0 transition placeholder:text-white/32 focus:border-amber-200/40 focus:bg-white/[0.07]"
-                  placeholder="you@company.com"
-                />
-              </label>
-              <label className="grid gap-2 text-sm text-white/78">
-                Website
-                <input
-                  name="website"
-                  className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-white outline-none ring-0 transition placeholder:text-white/32 focus:border-amber-200/40 focus:bg-white/[0.07]"
-                  placeholder="Current site or social page"
-                />
-              </label>
-            </div>
-            <label className="mt-4 grid gap-2 text-sm text-white/78">
-              What do you need?
-              <textarea
-                name="details"
-                required
-                rows={5}
-                className="rounded-[1.4rem] border border-white/10 bg-white/[0.05] px-4 py-3 text-white outline-none ring-0 transition placeholder:text-white/32 focus:border-amber-200/40 focus:bg-white/[0.07]"
-                placeholder="Tell me about your service area, the current site, and what you want to improve."
-              />
-            </label>
-            <button
-              type="submit"
-              className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-amber-200 px-6 py-4 text-sm font-semibold text-slate-950 transition duration-300 hover:bg-amber-100 hover:shadow-[0_18px_40px_rgba(214,180,106,0.26)]"
-            >
-              Get my free preview
-            </button>
-            <p className="mt-4 text-xs leading-6 text-white/48">
-              Expected response by email. If you need a faster path, write to{" "}
-              <Link
-                href={`mailto:${contactEmail}`}
-                className="text-white/72 underline decoration-white/25 underline-offset-4"
-              >
-                {contactEmail}
-              </Link>
-              .
-            </p>
-          </form>
+          <LeadForm initialStatus={leadStatus} />
         </div>
       </SectionShell>
 
