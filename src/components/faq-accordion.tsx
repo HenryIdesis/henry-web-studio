@@ -4,7 +4,7 @@ import { useState } from "react";
 import { faq } from "@/data/site";
 
 export function FAQAccordion() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <div className="mt-10 grid gap-3">

@@ -97,7 +97,7 @@ export function LeadForm({
           />
         </label>
         <label className="grid gap-2 text-sm text-white/78">
-          Website
+          Website <span className="text-white/42">(optional)</span>
           <input
             name="website"
             className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-white outline-none ring-0 transition placeholder:text-white/32 focus:border-amber-200/40 focus:bg-white/[0.07]"

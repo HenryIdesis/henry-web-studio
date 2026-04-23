@@ -10,6 +10,7 @@ import {
   trustSignals,
 } from "@/data/site";
 import { FAQAccordion } from "@/components/faq-accordion";
+import { BehindThisSection } from "@/components/behind-this";
 import { LeadForm } from "@/components/lead-form";
 
 function SectionHeading({
@@ -577,6 +578,8 @@ export default function Home({
           </aside>
         </div>
       </SectionShell>
+
+      <BehindThisSection />
 
       <SectionShell tone="soft" className="py-14 lg:py-20">
         <SectionHeading
